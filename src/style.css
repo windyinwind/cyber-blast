@@ -1,0 +1,125 @@
+:root {
+  --cyber-cyan: #00FFFF;
+  --cyber-magenta: #FF00FF;
+  --cyber-purple: #9D00FF;
+  --cyber-yellow: #FFFF00;
+  --cyber-dark: #0a0a0f;
+  --cyber-darker: #050507;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Courier New', monospace;
+  background: var(--cyber-darker);
+  color: var(--cyber-cyan);
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+}
+
+#app {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+#hand-canvas {
+  opacity: 0.3;
+  mix-blend-mode: screen;
+}
+
+#ui-container {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+#mode-selector {
+  display: flex;
+  gap: 15px;
+}
+
+.mode-btn {
+  padding: 15px 30px;
+  background: rgba(0, 255, 255, 0.1);
+  border: 2px solid var(--cyber-cyan);
+  color: var(--cyber-cyan);
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  box-shadow: 0 0 10px var(--cyber-cyan);
+  position: relative;
+  overflow: hidden;
+}
+
+.mode-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: var(--cyber-cyan);
+  transform: translate(-50%, -50%);
+  transition: width 0.3s, height 0.3s;
+  z-index: -1;
+}
+
+.mode-btn:hover::before {
+  width: 100%;
+  height: 100%;
+}
+
+.mode-btn:hover {
+  color: var(--cyber-dark);
+  box-shadow: 0 0 20px var(--cyber-cyan), 0 0 40px var(--cyber-cyan);
+}
+
+.mode-btn.active {
+  background: var(--cyber-cyan);
+  color: var(--cyber-dark);
+  box-shadow: 0 0 30px var(--cyber-cyan);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 30px var(--cyber-cyan); }
+  50% { box-shadow: 0 0 50px var(--cyber-cyan), 0 0 80px var(--cyber-cyan); }
+}
+
+#status-display {
+  padding: 10px 20px;
+  background: rgba(157, 0, 255, 0.2);
+  border: 1px solid var(--cyber-purple);
+  border-radius: 5px;
+  font-size: 14px;
+  text-align: center;
+  min-width: 200px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  #mode-selector {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .mode-btn {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}

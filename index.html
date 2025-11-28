@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hand Gesture 3D Experience</title>
+</head>
+<body>
+  <!-- 视频元素（隐藏，用于 MediaPipe） -->
+  <video id="video" autoplay playsinline style="display: none;"></video>
+
+  <!-- Canvas 画布（MediaPipe 调试，可选） -->
+  <canvas id="hand-canvas" style="position: absolute; top: 0; left: 0; z-index: 10; pointer-events: none; transform: scaleX(-1);"></canvas>
+
+  <!-- Three.js 渲染容器 -->
+  <div id="app"></div>
+
+  <!-- UI 控制面板 -->
+  <div id="ui-container">
+    <div id="mode-selector">
+      <button class="mode-btn" data-mode="gun">🔫 GUN</button>
+      <button class="mode-btn" data-mode="basketball">🏀 BASKETBALL</button>
+      <button class="mode-btn" data-mode="whip">⚡ WHIP</button>
+    </div>
+    <div id="status-display"></div>
+  </div>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
