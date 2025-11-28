@@ -7,6 +7,7 @@ import { ParticleSystem } from '../effects/ParticleSystem';
 import { GunSound } from '../audio/GunSound';
 import { AudioEngine } from '../audio/AudioEngine';
 import { CyberColors } from '../utils/Colors';
+import { isMobile } from '../utils/DeviceDetector';
 
 export class GunMode extends BaseMode {
   private targets: Target[] = [];
@@ -28,9 +29,14 @@ export class GunMode extends BaseMode {
       this.scene.add(bullet);
     }
 
-    for (let i = 0; i < 8; i++) {
+    // Optimize for mobile: fewer explosions and particles
+    const mobile = isMobile();
+    const explosionCount = mobile ? 4 : 8;
+    const particleCount = mobile ? 200 : 400;
+
+    for (let i = 0; i < explosionCount; i++) {
       const color = i % 2 === 0 ? CyberColors.CYAN : CyberColors.YELLOW;
-      const explosion = new ParticleSystem(400, color, 0.25); // 400 particles, 0.25 size for FULL SCREEN
+      const explosion = new ParticleSystem(particleCount, color, 0.25);
       this.explosions.push(explosion);
       this.scene.add(explosion.getObject());
     }
@@ -38,7 +44,8 @@ export class GunMode extends BaseMode {
 
   activate(): void {
     console.log('GunMode activated, spawning targets...');
-    this.spawnTargets(3);
+    const targetCount = isMobile() ? 1 : 3;
+    this.spawnTargets(targetCount);
     console.log('Targets spawned:', this.targets.length);
   }
 
@@ -92,7 +99,8 @@ export class GunMode extends BaseMode {
                 if (idx > -1) this.targets.splice(idx, 1);
 
                 if (this.targets.every(t => t.isDestroyed())) {
-                  this.spawnTargets(3);
+                  const targetCount = isMobile() ? 1 : 3;
+                  this.spawnTargets(targetCount);
                 }
               }, 3000);
             }

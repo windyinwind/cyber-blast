@@ -1,5 +1,6 @@
 import { HandData, HandVelocity } from '../types/Hand';
 import { GestureType, GestureData } from '../types/Gesture';
+import { isMobile } from '../utils/DeviceDetector';
 
 export class GestureRecognizer {
   private previousHand: HandData | null = null;
@@ -96,8 +97,13 @@ export class GestureRecognizer {
       return GestureType.GUN;
     }
 
-    if (straightFingers >= 3 && velocity.vy < -0.5) {
-      console.log('THROW detected! velocity.vy:', velocity.vy);
+    // THROW: Easier detection on mobile
+    const mobile = isMobile();
+    const throwFingers = mobile ? 2 : 3; // Mobile: 2+ fingers, Desktop: 3+ fingers
+    const throwVelocity = mobile ? -0.3 : -0.5; // Mobile: easier threshold
+
+    if (straightFingers >= throwFingers && velocity.vy < throwVelocity) {
+      console.log('🏀 THROW detected! velocity.vy:', velocity.vy, 'fingers:', straightFingers, 'mobile:', mobile);
       return GestureType.THROW;
     }
 

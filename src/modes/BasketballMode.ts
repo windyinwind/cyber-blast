@@ -7,6 +7,7 @@ import { BasketballSound } from '../audio/BasketballSound';
 import { AudioEngine } from '../audio/AudioEngine';
 import { ParticleSystem } from '../effects/ParticleSystem';
 import { CyberColors } from '../utils/Colors';
+import { isMobile } from '../utils/DeviceDetector';
 
 export class BasketballMode extends BaseMode {
   private hoop: Hoop;
@@ -27,14 +28,21 @@ export class BasketballMode extends BaseMode {
     this.basketball = new Basketball();
     this.previousBallPos = new THREE.Vector3();
 
+    // Optimize for mobile: reduce particle counts
+    const mobile = isMobile();
+    const mainParticles = mobile ? 400 : 800;
+    const trailParticles = mobile ? 200 : 400;
+    const additionalParticles = mobile ? 300 : 600;
+
     // Main score explosion - RAINBOW COLORS
-    this.scoreEffect = new ParticleSystem(800, CyberColors.YELLOW, 0.35);
+    this.scoreEffect = new ParticleSystem(mainParticles, CyberColors.YELLOW, 0.35);
 
     // Ball trail - thick and sparkling
-    this.ballTrailEffect = new ParticleSystem(400, CyberColors.CYAN, 0.15);
+    this.ballTrailEffect = new ParticleSystem(trailParticles, CyberColors.CYAN, 0.15);
 
     // Additional RAINBOW explosions for scoring - MAXIMUM COLORFUL
-    // Create 12 effects with different colors for RAINBOW explosion
+    // Mobile: 6 effects, Desktop: 12 effects
+    const effectCount = mobile ? 6 : 12;
     const rainbowColors = [
       CyberColors.MAGENTA,
       CyberColors.CYAN,
@@ -50,8 +58,8 @@ export class BasketballMode extends BaseMode {
       0xFF0040  // Red-pink
     ];
 
-    for (let i = 0; i < 12; i++) {
-      const effect = new ParticleSystem(600, rainbowColors[i], 0.3);
+    for (let i = 0; i < effectCount; i++) {
+      const effect = new ParticleSystem(additionalParticles, rainbowColors[i], 0.3);
       this.additionalScoreEffects.push(effect);
     }
   }
@@ -122,11 +130,20 @@ export class BasketballMode extends BaseMode {
     toHoop.normalize();
 
     // Calculate power based on hand speed
-    // velocity.speed ranges from 0 to ~3, we want power between 6 and 14
+    // Mobile: more forgiving power calculation with higher base power
+    const mobile = isMobile();
     const handSpeed = Math.abs(gestureData.velocity.vy) + gestureData.velocity.speed;
-    const power = 6 + Math.min(handSpeed * 3, 8);
 
-    console.log('🏀 Throwing with speed:', handSpeed, 'power:', power);
+    let power: number;
+    if (mobile) {
+      // Mobile: base power 8 (higher), range 8-14
+      power = 8 + Math.min(handSpeed * 2.5, 6);
+    } else {
+      // Desktop: base power 6, range 6-14
+      power = 6 + Math.min(handSpeed * 3, 8);
+    }
+
+    console.log('🏀 Throwing with speed:', handSpeed, 'power:', power, 'mobile:', mobile);
 
     this.basketball.shoot(startPos, toHoop, power);
     this.basketballSound.playThrow();

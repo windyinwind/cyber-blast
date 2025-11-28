@@ -7,6 +7,7 @@ import { WhipSound } from '../audio/WhipSound';
 import { AudioEngine } from '../audio/AudioEngine';
 import { ParticleSystem } from '../effects/ParticleSystem';
 import { CyberColors } from '../utils/Colors';
+import { isMobile } from '../utils/DeviceDetector';
 
 export class WhipMode extends BaseMode {
   private whipTrail: WhipTrail;
@@ -23,11 +24,15 @@ export class WhipMode extends BaseMode {
     this.whipTrail = new WhipTrail();
     this.handPosition = new THREE.Vector3();
 
-    // Create 10 electric particle systems for FULL-SCREEN stunning effects
-    for (let i = 0; i < 10; i++) {
+    // Optimize for mobile: fewer effects and particles
+    const mobile = isMobile();
+    const effectCount = mobile ? 5 : 10;
+    const particleCount = mobile ? 250 : 500;
+
+    for (let i = 0; i < effectCount; i++) {
       const colors = [CyberColors.MAGENTA, CyberColors.CYAN, CyberColors.PURPLE, CyberColors.YELLOW];
       const color = colors[i % colors.length];
-      const effect = new ParticleSystem(500, color, 0.2); // 500 particles, 0.2 size!
+      const effect = new ParticleSystem(particleCount, color, 0.2);
       this.electricEffects.push(effect);
       this.scene.add(effect.getObject());
     }
@@ -35,7 +40,8 @@ export class WhipMode extends BaseMode {
 
   activate(): void {
     this.scene.add(this.whipTrail);
-    this.spawnTargets(3);
+    const targetCount = isMobile() ? 1 : 3;
+    this.spawnTargets(targetCount);
   }
 
   deactivate(): void {
@@ -237,7 +243,8 @@ export class WhipMode extends BaseMode {
       if (idx > -1) this.targets.splice(idx, 1);
 
       if (this.targets.every(t => t.isDestroyed())) {
-        this.spawnTargets(3);
+        const targetCount = isMobile() ? 1 : 3;
+        this.spawnTargets(targetCount);
       }
     }, 1000);
   }
