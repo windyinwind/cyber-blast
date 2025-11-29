@@ -1,4 +1,4 @@
-# MotionBlast
+# CyberBlast
 
 [English](#english) | [中文](#中文) | [日本語](#日本語)
 
@@ -7,7 +7,7 @@
 ## English
 
 ### Overview
-MotionBlast is an interactive hand gesture-controlled web game featuring cyberpunk aesthetics. Use your webcam and hand movements to play three exciting game modes with stunning particle effects and immersive audio.
+CyberBlast is an interactive hand gesture-controlled web game featuring cyberpunk aesthetics. Use your webcam and hand movements to play three exciting game modes with stunning particle effects and immersive audio.
 
 ### Tech Stack
 - **Three.js**: 3D rendering and particle systems

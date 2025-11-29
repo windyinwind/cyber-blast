@@ -12,7 +12,7 @@ import { BasketballMode } from '../modes/BasketballMode';
 import { WhipMode } from '../modes/WhipMode';
 import { BaseMode } from '../modes/BaseMode';
 import { GameMode } from '../types/GameState';
-import { GestureType, GestureData } from '../types/Gesture';
+import { GestureData } from '../types/Gesture';
 import { HandData } from '../types/Hand';
 
 export class App {
@@ -23,7 +23,8 @@ export class App {
   private lightingManager: LightingManager;
   private postProcessing: PostProcessing;
   private audioEngine: AudioEngine;
-  private uiManager: UIManager;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private _uiManager: UIManager;
 
   private modes: Map<GameMode, BaseMode> = new Map();
   private currentMode: BaseMode | null = null;
@@ -54,7 +55,7 @@ export class App {
     this.handTracker = new HandTracker(videoElement, canvasElement);
     this.gestureRecognizer = new GestureRecognizer();
 
-    this.uiManager = new UIManager(this.stateManager);
+    this._uiManager = new UIManager(this.stateManager);
 
     this.modes.set(
       GameMode.GUN,

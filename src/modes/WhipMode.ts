@@ -46,7 +46,7 @@ export class WhipMode extends BaseMode {
 
   deactivate(): void {
     this.scene.remove(this.whipTrail);
-    this.whipTrail.clear();
+    this.whipTrail.clearPoints();
 
     // Force remove all targets including destroyed ones
     this.targets.forEach(target => {

@@ -74,7 +74,7 @@ export class WhipTrail extends THREE.Group {
     this.outerGlowGeometry.setFromPoints(smoothPoints);
   }
 
-  clear(): void {
+  clearPoints(): void {
     this.points = [];
     this.updateGeometry();
   }

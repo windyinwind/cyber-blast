@@ -2,7 +2,6 @@ import { EffectComposer } from 'postprocessing';
 import { RenderPass } from 'postprocessing';
 import { EffectPass } from 'postprocessing';
 import { BloomEffect } from 'postprocessing';
-import { ChromaticAberrationEffect } from 'postprocessing';
 import { VignetteEffect } from 'postprocessing';
 import { GlitchEffect } from 'postprocessing';
 import * as THREE from 'three';

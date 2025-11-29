@@ -13,5 +13,5 @@ export interface GestureData {
   type: GestureType;
   confidence: number;
   position: { x: number; y: number; z: number };
-  velocity: { vx: number; vy: number; vz: number };
+  velocity: { vx: number; vy: number; vz: number; speed: number };
 }

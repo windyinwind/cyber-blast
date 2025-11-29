@@ -1,10 +1,16 @@
-import { Hands, Results } from '@mediapipe/hands';
-import { Camera } from '@mediapipe/camera_utils';
 import { HandData } from '../types/Hand';
 
+// Use global MediaPipe objects from CDN
+declare global {
+  interface Window {
+    Hands: any;
+    Camera: any;
+  }
+}
+
 export class HandTracker {
-  private hands: Hands;
-  private camera: Camera;
+  private hands: any;
+  private camera: any;
   private videoElement: HTMLVideoElement;
   private canvasElement: HTMLCanvasElement;
   private canvasCtx: CanvasRenderingContext2D;
@@ -15,8 +21,14 @@ export class HandTracker {
     this.canvasElement = canvasElement;
     this.canvasCtx = canvasElement.getContext('2d')!;
 
-    this.hands = new Hands({
-      locateFile: (file) => {
+    // Use MediaPipe from CDN
+    const HandsConstructor = (window as any).Hands || window.Hands;
+    if (!HandsConstructor) {
+      throw new Error('MediaPipe Hands not loaded. Make sure the script tag is included.');
+    }
+
+    this.hands = new HandsConstructor({
+      locateFile: (file: string) => {
         return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
       }
     });
@@ -30,7 +42,13 @@ export class HandTracker {
 
     this.hands.onResults(this.onResults.bind(this));
 
-    this.camera = new Camera(this.videoElement, {
+    // Use MediaPipe Camera from CDN
+    const CameraConstructor = (window as any).Camera || window.Camera;
+    if (!CameraConstructor) {
+      throw new Error('MediaPipe Camera not loaded. Make sure the script tag is included.');
+    }
+
+    this.camera = new CameraConstructor(this.videoElement, {
       onFrame: async () => {
         await this.hands.send({ image: this.videoElement });
       },
@@ -50,7 +68,7 @@ export class HandTracker {
     }
   }
 
-  private onResults(results: Results): void {
+  private onResults(results: any): void {
     this.canvasCtx.save();
     this.canvasCtx.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height);
 
@@ -61,7 +79,7 @@ export class HandTracker {
       this.drawHand(landmarks);
 
       const handData: HandData = {
-        landmarks: landmarks.map(lm => ({ x: 1 - lm.x, y: lm.y, z: lm.z })),
+        landmarks: landmarks.map((lm: any) => ({ x: 1 - lm.x, y: lm.y, z: lm.z })),
         handedness,
         confidence: results.multiHandedness[0].score
       };
