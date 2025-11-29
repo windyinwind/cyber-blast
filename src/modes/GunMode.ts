@@ -18,7 +18,7 @@ export class GunMode extends BaseMode {
   private lastShootTime = 0;
   private readonly shootCooldown: number;
   private fingerTipPosition: THREE.Vector3 = new THREE.Vector3();
-  private respawnTimeouts: NodeJS.Timeout[] = [];
+  private respawnTimeouts: number[] = [];
   private isActive = false;
 
   constructor(scene: THREE.Scene, camera: THREE.Camera, audioEngine: AudioEngine) {
