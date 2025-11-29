@@ -16,12 +16,17 @@ export class GunMode extends BaseMode {
   private explosions: ParticleSystem[] = [];
   private gunSound: GunSound;
   private lastShootTime = 0;
-  private readonly shootCooldown = 0.3;
+  private readonly shootCooldown: number;
   private fingerTipPosition: THREE.Vector3 = new THREE.Vector3();
+  private respawnTimeouts: NodeJS.Timeout[] = [];
+  private isActive = false;
 
   constructor(scene: THREE.Scene, camera: THREE.Camera, audioEngine: AudioEngine) {
     super(scene, camera);
     this.gunSound = new GunSound(audioEngine);
+
+    // Mobile: easier shooting with shorter cooldown
+    this.shootCooldown = isMobile() ? 0.15 : 0.3;
 
     for (let i = 0; i < 10; i++) {
       const bullet = new Bullet();
@@ -43,6 +48,7 @@ export class GunMode extends BaseMode {
   }
 
   activate(): void {
+    this.isActive = true;
     console.log('GunMode activated, spawning targets...');
     const targetCount = isMobile() ? 1 : 3;
     this.spawnTargets(targetCount);
@@ -50,6 +56,12 @@ export class GunMode extends BaseMode {
   }
 
   deactivate(): void {
+    this.isActive = false;
+
+    // Clear all pending respawn timeouts
+    this.respawnTimeouts.forEach(timeout => clearTimeout(timeout));
+    this.respawnTimeouts = [];
+
     // Force remove all targets including destroyed ones
     this.targets.forEach(target => {
       if (target.parent) {
@@ -93,16 +105,17 @@ export class GunMode extends BaseMode {
 
               this.triggerExplosion(target.position);
 
-              setTimeout(() => {
+              const timeout = setTimeout(() => {
                 this.scene.remove(target);
                 const idx = this.targets.indexOf(target);
                 if (idx > -1) this.targets.splice(idx, 1);
 
-                if (this.targets.every(t => t.isDestroyed())) {
+                if (this.targets.length === 0) {
                   const targetCount = isMobile() ? 1 : 3;
                   this.spawnTargets(targetCount);
                 }
               }, 3000);
+              this.respawnTimeouts.push(timeout);
             }
           }
         });
@@ -116,7 +129,14 @@ export class GunMode extends BaseMode {
 
     this.explosions.forEach(explosion => explosion.update(deltaTime));
 
-    if (gestureData && gestureData.type === GestureType.SHOOT) {
+    // Mobile: allow both GUN and SHOOT gestures to trigger shooting for easier triggering
+    const mobile = isMobile();
+    const canShoot = gestureData && (
+      gestureData.type === GestureType.SHOOT ||
+      (mobile && gestureData.type === GestureType.GUN)
+    );
+
+    if (canShoot) {
       const now = Date.now() / 1000;
       if (now - this.lastShootTime > this.shootCooldown) {
         this.shoot();
@@ -143,6 +163,11 @@ export class GunMode extends BaseMode {
   }
 
   private spawnTargets(count: number): void {
+    if (!this.isActive) {
+      console.log('GunMode not active, skipping target spawn');
+      return;
+    }
+
     const spacing = 3.0;
     const startX = -(count - 1) * spacing / 2;
 
