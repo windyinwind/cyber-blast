@@ -19,7 +19,6 @@ export class WhipMode extends BaseMode {
   private handPosition: THREE.Vector3;
   private respawnTimeouts: number[] = [];
   private isActive = false;
-  private backgroundText: THREE.Mesh | null = null;
 
   constructor(scene: THREE.Scene, camera: THREE.Camera, audioEngine: AudioEngine) {
     super(scene, camera);
@@ -44,11 +43,6 @@ export class WhipMode extends BaseMode {
   activate(): void {
     this.isActive = true;
     this.scene.add(this.whipTrail);
-
-    // Create and add background text
-    this.backgroundText = this.createBackgroundText();
-    this.scene.add(this.backgroundText);
-
     const targetCount = isMobile() ? 1 : 3;
     this.spawnTargets(targetCount);
   }
@@ -62,14 +56,6 @@ export class WhipMode extends BaseMode {
 
     this.scene.remove(this.whipTrail);
     this.whipTrail.clearPoints();
-
-    // Remove background text
-    if (this.backgroundText) {
-      this.scene.remove(this.backgroundText);
-      this.backgroundText.geometry.dispose();
-      (this.backgroundText.material as THREE.Material).dispose();
-      this.backgroundText = null;
-    }
 
     // Force remove all targets including destroyed ones
     this.targets.forEach(target => {
@@ -300,52 +286,6 @@ export class WhipMode extends BaseMode {
       }
     };
     shake();
-  }
-
-  private createBackgroundText(): THREE.Mesh {
-    // Create canvas for text rendering
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d')!;
-
-    // Set canvas size
-    canvas.width = 1024;
-    canvas.height = 256;
-
-    // Configure text style
-    context.fillStyle = 'rgba(0, 0, 0, 0)';
-    context.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Draw text with neon cyan glow effect
-    context.font = 'bold 120px Arial';
-    context.textAlign = 'center';
-    context.textBaseline = 'middle';
-
-    // Add glow effect
-    context.shadowColor = '#00FFFF';
-    context.shadowBlur = 30;
-    context.fillStyle = '#00FFFF';
-    context.fillText('哪个少爷吸了?', canvas.width / 2, canvas.height / 2);
-
-    // Create texture from canvas
-    const texture = new THREE.CanvasTexture(canvas);
-    texture.needsUpdate = true;
-
-    // Create material with texture
-    const material = new THREE.MeshBasicMaterial({
-      map: texture,
-      transparent: true,
-      opacity: 0.6,
-      side: THREE.DoubleSide
-    });
-
-    // Create plane geometry
-    const geometry = new THREE.PlaneGeometry(8, 2);
-    const mesh = new THREE.Mesh(geometry, material);
-
-    // Position behind targets (targets are at z=-6, so place at z=-8)
-    mesh.position.set(0, 1.5, -8);
-
-    return mesh;
   }
 
   private spawnTargets(count: number): void {
