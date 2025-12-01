@@ -115,6 +115,44 @@ body {
   min-width: 200px;
 }
 
+#app-name {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 100;
+  margin: 0;
+  font-size: 32px;
+  font-weight: bold;
+  letter-spacing: 4px;
+  color: var(--cyber-cyan);
+  text-shadow:
+    0 0 10px var(--cyber-cyan),
+    0 0 20px var(--cyber-cyan),
+    0 0 30px var(--cyber-cyan),
+    0 0 40px var(--cyber-magenta);
+  animation: glow 2s ease-in-out infinite alternate;
+  user-select: none;
+  pointer-events: none;
+}
+
+@keyframes glow {
+  from {
+    text-shadow:
+      0 0 10px var(--cyber-cyan),
+      0 0 20px var(--cyber-cyan),
+      0 0 30px var(--cyber-cyan),
+      0 0 40px var(--cyber-magenta);
+  }
+  to {
+    text-shadow:
+      0 0 20px var(--cyber-cyan),
+      0 0 30px var(--cyber-cyan),
+      0 0 40px var(--cyber-cyan),
+      0 0 50px var(--cyber-magenta),
+      0 0 60px var(--cyber-magenta);
+  }
+}
+
 /* Mobile optimizations */
 @media (max-width: 768px) {
   #ui-container {
@@ -145,6 +183,13 @@ body {
     /* Slightly more visible on mobile for debugging */
     opacity: 0.4;
   }
+
+  #app-name {
+    top: 10px;
+    left: 10px;
+    font-size: 20px;
+    letter-spacing: 2px;
+  }
 }
 
 /* Extra small mobile devices */
@@ -159,6 +204,11 @@ body {
   #status-display {
     font-size: 11px;
     min-width: 120px;
+  }
+
+  #app-name {
+    font-size: 16px;
+    letter-spacing: 1px;
   }
 }
 
