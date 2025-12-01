@@ -7,7 +7,7 @@
 
 ## Play Online
 
-- **Website:** https://cyberblast.online
+- **Website:** https://cyberblast.online OR https://cyber-blast-1l4.pages.dev/
 - **Demo video:** [![Watch demo](https://img.youtube.com/vi/6ijDPox44eE/hqdefault.jpg)](https://www.youtube.com/watch?v=6ijDPox44eE)
 
 - **Watch on YouTube:** https://www.youtube.com/watch?v=6ijDPox44eE
