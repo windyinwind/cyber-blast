@@ -56,13 +56,6 @@ CyberBlast is an interactive hand gesture-controlled web game featuring cyberpun
 
 **Gesture:** Closed fist with fast horizontal movement
 
-### Controls
-- **Number Keys (1-3)**: Switch between game modes
-  - `1` - Gun Mode
-  - `2` - Basketball Mode
-  - `3` - Whip Mode
-- **M Key**: Toggle music on/off
-- **Camera**: Required for hand tracking
 
 ### Installation
 
@@ -128,14 +121,6 @@ MotionBlast 是一款基于手势控制的互动网页游戏，采用赛博朋�
 
 **手势：** 握拳快速水平移动
 
-### 控制方式
-- **数字键 (1-3)**：切换游戏模式
-  - `1` - 射击模式
-  - `2` - 篮球模式
-  - `3` - 鞭子模式
-- **M 键**：开关音乐
-- **摄像头**：手部追踪必需
-
 ### 安装运行
 
 ```bash
@@ -200,13 +185,6 @@ MotionBlastは、サイバーパンク美学を特徴とするインタラクテ
 
 **ジェスチャー：** 握りこぶしで素早く水平移動
 
-### 操作方法
-- **数字キー (1-3)**：ゲームモード切り替え
-  - `1` - ガンモード
-  - `2` - バスケットボールモード
-  - `3` - ウィップモード
-- **M キー**：音楽オン/オフ切り替え
-- **カメラ**：ハンドトラッキングに必須
 
 ### インストール
 
